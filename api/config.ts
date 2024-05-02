@@ -6,6 +6,7 @@ const defaultEnvironment = 'development'
 export const systemConfig = { 
   port: process.env.PORT || 3000,
   environment: process.env.NODE_ENV || defaultEnvironment,
+  base_path: process.env.BASE_PATH || 'user-service',
   database: {
     db_host: process.env.DB_HOST,
     db_port: 3306,
