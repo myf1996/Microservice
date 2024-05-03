@@ -5,8 +5,8 @@
   "main": "index.ts",
   "scripts": {
     "build": "npx tsc",
-    "local:dev": "npx tsc && node dist/local.js",
-    "local": "node dist/local.js"
+    "local:dev": "npx tsc && node dist/api/local.js",
+    "local": "node dist/api/local.js"
   },
   "author": "Yassar Farooq",
   "license": "ISC",

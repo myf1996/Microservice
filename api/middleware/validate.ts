@@ -1,7 +1,10 @@
-// import HttpStatus from 'http-status';
 import { Request, Response, NextFunction } from 'express';
 
-export const validateRequest = (options: any) => async (req: Request, res: Response, next: NextFunction) => {
+interface validateRequestDto {
+  schema: any;
+}
+
+export const validateRequest = (options: validateRequestDto) => async (req: Request, res: Response, next: NextFunction) => {
   try {
     await options.schema.validateAsync({
       ...req.query,
