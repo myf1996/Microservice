@@ -5,6 +5,8 @@ import health from "./controllers/health";
 import user from "./controllers/user";
 import userid from "./controllers/user/{id}";
 import { systemConfig } from "./config";
+import validateRequest from "./middleware/validate";
+import { userDto, userParamsDto, userQueryDto } from "./dto/user.dto";
 
 
 const BASE_PATH = systemConfig.base_path
@@ -38,11 +40,14 @@ function createRoutes(
 }
 
 createRoutes(`/${BASE_PATH}/health`, health, {});
-createRoutes(`/${BASE_PATH}/user`, user, { post: [authenticate], get: [authenticate] });
+createRoutes(`/${BASE_PATH}/user`, user, { 
+  post: [authenticate, validateRequest({schema: userDto})], 
+  get: [authenticate, validateRequest({schema: userQueryDto})] 
+});
 createRoutes(`/${BASE_PATH}/user/:id`, userid, {
-  get: [authenticate],
-  patch: [authenticate],
-  delete: [authenticate],
+  get: [authenticate, validateRequest({schema: userParamsDto})],
+  patch: [authenticate, validateRequest({schema: {...userParamsDto, ...userDto}})],
+  delete: [authenticate, validateRequest({schema: {...userParamsDto }})],
 });
 
 app.use(errorMiddleware);
