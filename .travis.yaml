@@ -1,0 +1,45 @@
+language: node_js
+
+node_js:
+  - '18.14.0'
+
+notifications:
+  slack:
+    rooms:
+      - ciarus-workspace:Vs73kHeAcolTobngWmvs7phG
+    on_success: always
+    on_failure: always
+    on_pull_requests: false
+    if: (fork = false AND branch = master AND type IN (push, api))
+
+jobs:
+  include:
+    - stage: 'Tests'
+      name: 'Build the app'
+      script:
+        - echo "Running..."
+      
+    - stage: 'Deploying'
+      name: 'Deploying'
+      if: fork = false AND branch = master AND type IN (push, api)
+      script:
+        - ./scripts/deploy.sh
+
+cache:
+  - bundler
+  - npm
+  - pip
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - python
+      - python-pip
+
+before_install:
+  - curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+  - sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+  - sudo apt-get update && sudo apt-get install terraform
+  - chmod +x ./scripts/deploy.sh
